@@ -10,6 +10,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
 const Test = lazy(() => import('./pages/Test'));
 const Landing = lazy(() => import('./pages/Landing'));
+const CommunityPage = lazy(() => import('./pages/CommunityPage'));
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="topics" element={<TopicsPage />} />
+          <Route path="community" element={<CommunityPage />} />
         </Route>
       </Routes>
     </Suspense>
