@@ -22,18 +22,6 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <NavLink 
-              to="/" 
-              className={({ isActive }) => 
-                `text-base font-medium transition-colors hover:text-primary-600 ${
-                  isActive 
-                    ? 'text-primary-600 border-b-2 border-primary-600' 
-                    : 'text-gray-700'
-                }`
-              }
-            >
-              Home
-            </NavLink>
-            <NavLink 
               to="/topics" 
               className={({ isActive }) => 
                 `text-base font-medium transition-colors hover:text-primary-600 ${
@@ -43,13 +31,25 @@ const Navbar = () => {
                 }`
               }
             >
-              Topics
+              Research
+            </NavLink>
+            <NavLink 
+              to="/" 
+              className={({ isActive }) => 
+                `text-base font-medium transition-colors hover:text-primary-600 ${
+                  isActive 
+                    ? 'text-primary-600 border-b-2 border-primary-600' 
+                    : 'text-gray-700'
+                }`
+              }
+            >
+              Chatbot
             </NavLink>
             <NavLink 
               to="/login" 
-              className="btn-secondary"
+              className="btn-secondary bg-yellow-400 text-white"
             >
-              Login
+              4867
             </NavLink>
           </div>
 
@@ -75,6 +75,19 @@ const Navbar = () => {
             className="md:hidden overflow-hidden bg-white"
           >
             <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+            <NavLink 
+                to="/"
+                onClick={() => setIsOpen(false)}
+                className={({ isActive }) => 
+                  `px-3 py-2 rounded-md text-base font-medium ${
+                    isActive 
+                      ? 'bg-primary-50 text-primary-600' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`
+                }
+              >
+                Research
+              </NavLink>
               <NavLink 
                 to="/"
                 onClick={() => setIsOpen(false)}
@@ -86,27 +99,15 @@ const Navbar = () => {
                   }`
                 }
               >
-                Home
+                Chatbot
               </NavLink>
-              <NavLink 
-                to="/topics"
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) => 
-                  `px-3 py-2 rounded-md text-base font-medium ${
-                    isActive 
-                      ? 'bg-primary-50 text-primary-600' 
-                      : 'text-gray-700 hover:bg-gray-50'
-                  }`
-                }
-              >
-                Topics
-              </NavLink>
+              
               <NavLink 
                 to="/login"
                 onClick={() => setIsOpen(false)}
                 className="btn-primary w-full justify-center"
               >
-                Login
+                4867
               </NavLink>
             </div>
           </motion.div>

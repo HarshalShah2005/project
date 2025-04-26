@@ -11,10 +11,7 @@ const HomePage = () => {
       className="h-[calc(100vh-64px-48px)]"
     >
       <div className="flex flex-col lg:flex-row h-full gap-6">
-        <div className="w-full lg:w-1/3 h-full max-h-[450px] lg:max-h-full">
-          <FileUploader />
-        </div>
-        <div className="w-full lg:w-2/3 h-full max-h-[calc(100%-450px-24px)] lg:max-h-full">
+        <div className="w-full h-full">
           <ChatWindow />
         </div>
       </div>

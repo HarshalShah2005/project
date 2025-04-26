@@ -94,6 +94,9 @@ const TopicCard = ({ title, description, impactFactor, domain, trendData }: Topi
           />
         </svg>
       </div>
+      <div>
+        <button className="mt-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors">Send Mail</button>
+      </div>
     </motion.div>
   );
 };
