@@ -17,7 +17,7 @@ import {
 
 const Landing = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('monthly');
+  const [activeTab, setActiveTab] = useState<'monthly' | 'yearly'>('monthly');
 
   const features = [
     {

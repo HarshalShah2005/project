@@ -1,36 +1,50 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Bookmark, Share2 } from 'lucide-react';
+import { BookOpen, Bookmark, Share2, Lock, Unlock, FileText, Quote } from 'lucide-react';
 
-type TopicCardProps = {
+interface TopicCardProps {
   title: string;
   description: string;
   impactFactor: number;
   domain: string;
   trendData: number[];
-};
+  openAccess?: boolean;
+  worksCount?: number;
+  citedByCount?: number;
+}
 
-const TopicCard = ({ title, description, impactFactor, domain, trendData }: TopicCardProps) => {
+const TopicCard = ({ 
+  title, 
+  description, 
+  impactFactor, 
+  domain, 
+  openAccess = false,
+  worksCount = 0,
+  citedByCount = 0 
+}: TopicCardProps) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   
+  // Generate random data points for this specific card
+  const randomData = useMemo(() => {
+    const dataPoints = 8;
+    return Array.from({ length: dataPoints }, () => 
+      Math.random() * 0.7 + 0.2 // Generate numbers between 0.2 and 0.9
+    );
+  }, [title]); // Regenerate only if the card title changes
+  
+  // Create SVG path for sparkline
+  const sparklinePath = useMemo(() => {
+    return randomData.reduce((path, val, index) => {
+      const x = (index / (randomData.length - 1)) * 100;
+      const y = 30 - (val * 30); // Scale to fit in 30px height
+      return `${path} ${index === 0 ? 'M' : 'L'} ${x},${y}`;
+    }, '');
+  }, [randomData]);
+
   const toggleBookmark = () => {
     setIsBookmarked(!isBookmarked);
   };
-  
-  // Normalize trend data to fit in the sparkline
-  const normalizedData = trendData.map(val => {
-    const min = Math.min(...trendData);
-    const max = Math.max(...trendData);
-    return ((val - min) / (max - min)) * 30;
-  });
-  
-  // Create SVG path for sparkline
-  const sparklinePath = normalizedData.reduce((path, val, index) => {
-    const x = (index / (normalizedData.length - 1)) * 100;
-    const y = 30 - val;
-    return `${path} ${index === 0 ? 'M' : 'L'} ${x},${y}`;
-  }, '');
-  
+
   return (
     <motion.div 
       whileHover={{ y: -5, boxShadow: '0 10px 30px -15px rgba(0, 0, 0, 0.15)' }}
@@ -40,9 +54,22 @@ const TopicCard = ({ title, description, impactFactor, domain, trendData }: Topi
       className="card group cursor-pointer"
     >
       <div className="mb-2 flex justify-between items-start">
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-          {domain}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+            {domain}
+          </span>
+          {openAccess ? (
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              <Unlock size={12} className="mr-1" />
+              Open Access
+            </span>
+          ) : (
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+              <Lock size={12} className="mr-1" />
+              Subscription
+            </span>
+          )}
+        </div>
         <div className="flex space-x-1">
           <button 
             onClick={toggleBookmark}
@@ -71,31 +98,50 @@ const TopicCard = ({ title, description, impactFactor, domain, trendData }: Topi
         {description}
       </p>
       
-      <div className="mt-4 flex justify-between items-end">
-        <div>
+      <div className="mt-4 space-y-2">
+        <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center space-x-1">
             <BookOpen size={16} className="text-gray-500" />
-            <span className="text-sm font-medium">Impact Factor: {impactFactor.toFixed(2)}</span>
+            <span className="text-sm font-medium">IF: {impactFactor.toFixed(2)}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <FileText size={16} className="text-gray-500" />
+            <span className="text-sm">Papers: {worksCount.toLocaleString()}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Quote size={16} className="text-gray-500" />
+            <span className="text-sm">Citations: {citedByCount.toLocaleString()}</span>
           </div>
         </div>
-        
-        <svg width="100" height="30" className="text-primary-500">
-          <path
-            d={sparklinePath}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx={100}
-            cy={30 - normalizedData[normalizedData.length - 1]}
-            r="2"
-            fill="currentColor"
-          />
-        </svg>
+
+        <div className="flex justify-end">
+          <svg width="100" height="30" className="text-primary-500">
+            <path
+              d={sparklinePath}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {randomData.map((val, index) => (
+              <circle
+                key={index}
+                cx={(index / (randomData.length - 1)) * 100}
+                cy={30 - (val * 30)}
+                r="2"
+                fill="currentColor"
+              />
+            ))}
+          </svg>
+        </div>
       </div>
-      <div>
-        <button className="mt-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors">Send Mail</button>
+      
+      <div className="mt-4">
+        <button className="w-full px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors flex items-center justify-center gap-2">
+          <Share2 size={16} />
+          Contact Journal
+        </button>
       </div>
     </motion.div>
   );

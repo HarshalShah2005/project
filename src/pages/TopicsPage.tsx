@@ -21,6 +21,12 @@ const TopicsPage = () => {
       setIsLoading(true);
       setError(null);
       
+      // Store the file URL for chatbot feature
+      const fileUrl = URL.createObjectURL(file);
+      localStorage.setItem('uploadedPdfUrl', fileUrl);
+      localStorage.setItem('uploadedPdfName', file.name);
+      console.log('PDF stored for chatbot feature:', fileUrl);
+
       const formData = new FormData();
       formData.append('file', file);
 
@@ -106,6 +112,9 @@ const TopicsPage = () => {
                       impactFactor={journal.impact_factor || 0}
                       domain={journal.publisher || ''}
                       trendData={[journal.similarity_score || 0]}
+                      openAccess={journal.open_access}
+                      worksCount={journal.works_count}
+                      citedByCount={journal.cited_by_count}
                     />
                   ))}
                   
