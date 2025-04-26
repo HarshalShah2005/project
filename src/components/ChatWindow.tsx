@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Mic, Loader2 } from 'lucide-react';
+import { getGeminiResponse } from '../services/GeminiService';
 
 type Message = {
   id: string;
@@ -30,33 +31,42 @@ const ChatWindow = () => {
     scrollToBottom();
   }, [messages]);
   
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
     
-    const newMessage: Message = {
+    const userMessage: Message = {
       id: Date.now().toString(),
       text: inputValue,
       sender: 'user',
       timestamp: new Date(),
     };
     
-    setMessages(prev => [...prev, newMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
-    
-    // Simulate analysis
     setIsAnalyzing(true);
-    setTimeout(() => {
-      setIsAnalyzing(false);
+    
+    try {
+      const response = await getGeminiResponse(inputValue);
       
       const systemResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Based on your paper\'s content, I recommend considering journals in the field of computational biology. Would you like specific journal recommendations?',
+        text: response,
         sender: 'system',
         timestamp: new Date(),
       };
       
       setMessages(prev => [...prev, systemResponse]);
-    }, 2000);
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'Sorry, I encountered an error. Please try again.',
+        sender: 'system',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
   
   return (

@@ -64,7 +64,7 @@ const TopicCard = ({
 
       // Send POST request to n8n webhook
       await axios.post(
-        'https://harshal2005.app.n8n.cloud/webhook/ba41d87f-b404-41b4-a1bf-52cbca34a082',
+        'https://harshal2005.app.n8n.cloud/webhook-test/ba41d87f-b404-41b4-a1bf-52cbca34a082',
         journalData
       );
 
