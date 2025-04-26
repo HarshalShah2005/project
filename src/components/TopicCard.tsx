@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Bookmark, Share2, Lock, Unlock, FileText, Quote } from 'lucide-react';
+import axios from 'axios';
 
 interface TopicCardProps {
   title: string;
@@ -23,6 +24,7 @@ const TopicCard = ({
   citedByCount = 0 
 }: TopicCardProps) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isContacting, setIsContacting] = useState(false);
   
   // Generate random data points for this specific card
   const randomData = useMemo(() => {
@@ -43,6 +45,36 @@ const TopicCard = ({
 
   const toggleBookmark = () => {
     setIsBookmarked(!isBookmarked);
+  };
+
+  const handleContactJournal = async () => {
+    try {
+      setIsContacting(true);
+      
+      // Prepare the data to send to n8n webhook
+      const journalData = {
+        title: title,
+        description: description,
+        impactFactor: impactFactor,
+        domain: domain,
+        openAccess: openAccess,
+        worksCount: worksCount,
+        citedByCount: citedByCount
+      };
+
+      // Send POST request to n8n webhook
+      await axios.post(
+        'https://harshal2005.app.n8n.cloud/webhook/ba41d87f-b404-41b4-a1bf-52cbca34a082',
+        journalData
+      );
+
+      alert('Contact request sent successfully!');
+    } catch (error) {
+      console.error('Error contacting journal:', error);
+      alert('Failed to send contact request. Please try again.');
+    } finally {
+      setIsContacting(false);
+    }
   };
 
   return (
@@ -138,9 +170,17 @@ const TopicCard = ({
       </div>
       
       <div className="mt-4">
-        <button className="w-full px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors flex items-center justify-center gap-2">
-          <Share2 size={16} />
-          Contact Journal
+        <button 
+          className="w-full px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handleContactJournal}
+          disabled={isContacting}
+        >
+          {isContacting ? (
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white" />
+          ) : (
+            <Share2 size={16} />
+          )}
+          {isContacting ? 'Sending...' : 'Contact Journal'}
         </button>
       </div>
     </motion.div>

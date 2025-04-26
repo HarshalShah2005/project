@@ -4,6 +4,7 @@ import axios from 'axios';
 import TopicCard from '../components/TopicCard';
 import { Journal } from '../types/Journal';
 import FileUploader from '../components/FileUploader';
+import FileStorage from '../services/FileStorage';
 
 interface AnalysisResponse {
   summary: string;
@@ -21,11 +22,9 @@ const TopicsPage = () => {
       setIsLoading(true);
       setError(null);
       
-      // Store the file URL for chatbot feature
-      const fileUrl = URL.createObjectURL(file);
-      localStorage.setItem('uploadedPdfUrl', fileUrl);
-      localStorage.setItem('uploadedPdfName', file.name);
-      console.log('PDF stored for chatbot feature:', fileUrl);
+      // Save PDF locally
+      const pdfId = await FileStorage.savePdf(file);
+      console.log('PDF saved locally with ID:', pdfId);
 
       const formData = new FormData();
       formData.append('file', file);
