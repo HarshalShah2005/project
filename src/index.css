@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply text-gray-900;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 antialiased;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 px-4 py-2;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-gray-200 text-gray-800 hover:bg-gray-300 px-4 py-2;
+  }
+  
+  .input {
+    @apply rounded-md border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 px-4 py-2 w-full transition-all;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-md p-6;
+  }
+}
